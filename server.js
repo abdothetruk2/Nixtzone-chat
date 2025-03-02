@@ -32,10 +32,11 @@ const io = new Server(server, {
 
 // MySQL Connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '6512746', // Change this to your actual MySQL password
-    database: 'mydb'
+   ost: process.env.MYSQLHOST,  // Use Railway's MySQL host
+  user: process.env.MYSQLUSER,  // Use Railway's MySQL user
+  password: process.env.MYSQLPASSWORD,  // Use Railway's MySQL password
+  database: process.env.MYSQLDATABASE,  // Use Railway's MySQL database
+  port: process.env.MYSQLPORT || 3306,  
 });
    
 db.connect(err => {
