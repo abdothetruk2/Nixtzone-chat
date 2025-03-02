@@ -1,0 +1,121 @@
+body{
+
+    padding:0px;
+    margin:0px;
+}
+
+.nav-link{
+
+    color:white;
+    font-weight: 600;
+
+    font-size:20px;
+     white-space:nowrap
+
+}
+
+
+.wall{
+
+
+     height:600px;
+   background-size: cover;
+     background-repeat: no-repeat;
+     background-position: center;
+      color:white;
+
+      font-weight:bold;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+     margin-bottom: 200px;
+    background-image:url("ace4.png")
+}
+
+.wall2{
+
+
+    height:600px;
+  background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+     color:white;
+
+     font-weight:bold;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+    margin-bottom: 200px;
+   background-image:url("ace7.jpg")
+}
+
+.wall h1{
+
+
+    font-weight:bold;
+}
+
+.box{
+    margin-bottom: 100px;
+
+    right:400px;
+    position: relative;
+    margin-top: 100px;
+    background-color:rgb(238, 236, 236);
+}
+.box2{
+ color:white;
+ box-shadow:5px 2px 20px 1px black;
+z-index: 1555;
+    background-color: rgb(37, 122, 233);
+    margin-top: 100px;
+    margin-bottom: 100px;
+    border-radius: 5px;
+}
+
+.table{
+
+
+   padding:10px;
+    box-shadow:0px 0px 10px 1px
+}
+
+.fa-check{
+
+    color:green
+}
+
+
+.f4{
+       color:rgb(29, 114, 12);
+       font-weight: bold;
+         text-align:start;
+}
+
+
+.tsc{
+
+    opacity: 0;
+}
+
+.rightto{
+
+    position: relative;
+     left:2000px
+
+}
+
+
+
+.leftto{
+
+    position: relative;
+
+    right:2000px
+}
+
+.ico{
+    display:none;
+}
