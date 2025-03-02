@@ -37,7 +37,7 @@ const db = mysql.createConnection({
   password: process.env.MYSQLPASSWORD  || "fkbmBDcRydklWBOhboqEYGFbuIrNIzrp",  // Use Railway's MySQL password
   database: process.env.MYSQLDATABASE || 'railway',  // Use Railway's MySQL database
   port: process.env.MYSQLPORT || 3306,
-  MYSQL_URI='mysql://root:fkbmBDcRydklWBOhboqEYGFbuIrNIzrp@nozomi.proxy.rlwy.net:27314/railway'
+  MYSQL_URI:'mysql://root:fkbmBDcRydklWBOhboqEYGFbuIrNIzrp@nozomi.proxy.rlwy.net:27314/railway'
 
 });
    
