@@ -34,10 +34,10 @@ const io = new Server(server, {
 const db = mysql.createConnection({
    host: process.env.MYSQLHOST || 'mysql.railway.internal',  // Use Railway's MySQL host
   user: process.env.MYSQLUSER || 'root',  // Use Railway's MySQL user
-  password: process.env.MYSQLPASSWORD  || "fkbmBDcRydklWBOhboqEYGFbuIrNIzrp",  // Use Railway's MySQL password
+  password: process.env.MYSQLPASSWORD  || "jDHdPHfMgwmBzZZkusbhShoSQvPOeVKj",  // Use Railway's MySQL password
   database: process.env.MYSQLDATABASE || 'railway',  // Use Railway's MySQL database
   port: process.env.MYSQLPORT || 3306,
-  MYSQL_URI:'mysql://root:fkbmBDcRydklWBOhboqEYGFbuIrNIzrp@nozomi.proxy.rlwy.net:27314/railway'
+
 
 });
    
