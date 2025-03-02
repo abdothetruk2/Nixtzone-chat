@@ -51,6 +51,10 @@ db.connect(err => {
 
 // Sample Express API Route
 app.get('/', (req, res) => {    
+  if (!req.cookies.username) {
+            res.redirect("/login");
+
+  } else {
     db.query('SELECT * FROM mydb where status=1', (err, results) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -58,9 +62,7 @@ app.get('/', (req, res) => {
             res.render("index", { users: results }); // Pass the users array to the template
         }
     });
-    if (!req.cookies.username) {
-    } else {
-        res.redirect("/login");
+    
     }
 });
 app.get('/users', (req, res) => {
