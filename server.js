@@ -58,6 +58,10 @@ app.get('/', (req, res) => {
             res.render("index", { users: results }); // Pass the users array to the template
         }
     });
+    if (!req.cookies.username) {
+    } else {
+        res.redirect("/login");
+    }
 });
 app.get('/users', (req, res) => {
     db.query('SELECT * FROM mydb', (err, results) => {
