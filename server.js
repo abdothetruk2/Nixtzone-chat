@@ -5,7 +5,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cookie = require("cookie");
 const app = express();
-const PORT = 5000;
+const PORT = 80;
 const cookieParser = require("cookie-parser");
 
 app.use(cors());
@@ -32,7 +32,7 @@ const io = new Server(server, {
 
 // MySQL Connection
 const db = mysql.createConnection({
-   host: process.env.MYSQLHOST || 'localhost',  // Use Railway's MySQL host
+   host: process.env.MYSQLHOST || 'mysql.railway.internal',  // Use Railway's MySQL host
   user: process.env.MYSQLUSER || 'root',  // Use Railway's MySQL user
   password: process.env.MYSQLPASSWORD  || "fkbmBDcRydklWBOhboqEYGFbuIrNIzrp",  // Use Railway's MySQL password
   database: process.env.MYSQLDATABASE || 'railway',  // Use Railway's MySQL database
