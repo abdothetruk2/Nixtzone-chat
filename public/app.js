@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const socket = io('http://localhost:5000');
+  const socket = io('https://nixtzone-chat-production.up.railway.app');
 
 
 
