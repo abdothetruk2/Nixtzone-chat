@@ -5,22 +5,22 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cookie = require("cookie");
 const app = express();
-const PORT = 80;
+const PORT = 5000;
 const cookieParser = require("cookie-parser");
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser()); // Middleware to parse cookies
-
 app.use(express.urlencoded({ extended: true })); // Add this line to parse URL-encoded data
+
 app.get("/set-cookie", (req, res) => {
     res.cookie("username", "JohnDoe"); // Sets a simple cookie
     res.send("Cookie has been set!");
 });
-app.use(cookieParser());
+
 // Create an HTTP server
 const server = http.createServer(app);
-app.set("view engine", "ejs");  
+app.set("view engine", "ejs");
 app.use(express.static('public'));
 
 const io = new Server(server, {
@@ -32,15 +32,12 @@ const io = new Server(server, {
 
 // MySQL Connection
 const db = mysql.createConnection({
-   host: process.env.MYSQLHOST || 'mysql.railway.internal',  // Use Railway's MySQL host
-  user: process.env.MYSQLUSER || 'root',  // Use Railway's MySQL user
-  password: process.env.MYSQLPASSWORD  || "jDHdPHfMgwmBzZZkusbhShoSQvPOeVKj",  // Use Railway's MySQL password
-  database: process.env.MYSQLDATABASE || 'railway',  // Use Railway's MySQL database
-  port: process.env.MYSQLPORT || 3306,
-
-
+    host: 'localhost',
+    user: 'root',
+    password: '6512746', // Change this to your actual MySQL password
+    database: 'mydb'
 });
-   
+
 db.connect(err => {
     if (err) {
         console.error('Database connection failed: ' + err.stack);
@@ -50,21 +47,42 @@ db.connect(err => {
 });
 
 // Sample Express API Route
-app.get('/', (req, res) => {    
-  if (!req.cookies.username) {
-            res.redirect("/login");
-
-  } else {
-    db.query('SELECT * FROM mydb where status=1', (err, results) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-        } else {
-            res.render("index", { users: results }); // Pass the users array to the template
-        }
+io.on('connection', socket => {
+    socket.on('message', (data) => {
+        // Broadcast message to all connected clients
+        io.emit('receiveMessage', { message: data.message, email: data.email });
     });
     
+
+
+db.query('SELECT * FROM mydb where status=1', (err, results) => {   
+
+    if (err) {
+        socket.emit('users', { error: err.message });
+    } else {
+        socket.broadcast.emit('users', results);
     }
 });
+    // Disconnect event
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+});
+    
+app.get('/', (req, res) => {
+    if (req.cookies.username) {
+        db.query('SELECT * FROM mydb where status=1', (err, results) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else {
+                res      .render("index", { users: results }); // Pass the users array to the template
+            }
+        })
+    } else {
+        res.render("index3");
+    }
+});
+
 app.get('/users', (req, res) => {
     db.query('SELECT * FROM mydb', (err, results) => {
         if (err) {
@@ -72,105 +90,68 @@ app.get('/users', (req, res) => {
         } else {
             res.render("index2", { users: results }); // Pass the users array to the template
         }
-
     });
-});   
+});
 
 app.post('/users', (req, res) => {
     const { name, email, password } = req.body;
-    var s=[];
-   db.query('Select  * from  mydb where   email =? ', [ email], (err, result) => {
+    db.query('SELECT * FROM mydb WHERE email = ?', [email], (err, result) => {
         if (err) {
             res.status(500).json({ error: err.message });
-        } else{
-        
-        s=result;
-        console.log(s)
+        } else if (result.length === 0) {
+            db.query('INSERT INTO mydb (username, email, password) VALUES (?, ?, ?)', [name, email, password], (err, result) => {
+                if (err) {
+                    res.status(500).json({ error: err.message });
+                } else {
+                    res.redirect("/login");
+                }
+            });
+        } else {
+            res.status(400).render("index2", { error: "Something went wrong!" });
+        }
+    });
+});
 
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    db.query('SELECT * FROM mydb WHERE email = ? AND password = ?', [email, password], (err, result) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else if (result.length === 0) {
+            res.redirect("/login");
+        } else {
+            res.cookie("username", email);
+            db.query('UPDATE mydb SET status = 1 WHERE email = ?', [email], (err, result) => {
+                if (err) {
+                    res.status(500).json({ error: err.message });
+                } else {
+                    res.redirect("/");
+                }
+            });
+        }
+    });
+});
+
+app.get('/login', (req, res) => {
+    if (req.cookies.username) {
+        res.redirect("/");
+    } else {
+        res.render("index3");
     }
-    
-    if(s.length ==0){
+});
 
-
-
-    db.query('INSERT INTO mydb (username, email, password) VALUES (?, ?, ?)', [name, email, password], (err, result) => {
+app.get('/logout', (req, res) => {
+    db.query('UPDATE mydb SET status = 0 WHERE email = ?', [req.cookies.username], (err, result) => {
         if (err) {
             res.status(500).json({ error: err.message });
         } else {
+            res.clearCookie("username");
             res.redirect("/login");
-
-        }   
-    });
-
-}else{  
-
-    res.status(400).render("index2", { error: "Something went wrong!" });
-
-}
-});
-});
-app.post('/login', (req, res) => {
-    const { name, email, password } = req.body;
-    
-    db.query('Select * from mydb where email =? and password= ?', [ email, password], (err, result) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-        } else{
-
-console.log(result);
-            if(result.length ==0){
-                res.redirect("/login");
-            }else{
-                res.cookie("username", email)
-                res.redirect("/"); // Sets a simple cookie
-            }
-
-            db.query('Update  mydb set status = 1 where email=? ', [ email], (err, result) => {
-                if (err) {
-                    res.status(500).json({ error: err.message });
-               
-                } else {
-                }
-            });
-
         }
     });
-
-        
-    
-});
-
-
-    
-
-io.on('connection', socket => {
-    console.log('A user connected:', socket.id);
-
-    // Listen for messages from the client
-    socket.on('message', (message) => {
-        console.log('Received message:', message);
-
-        // Broadcast message to all connected clients
-        io.emit('receiveMessage', message);
-    });
-
-    // Disconnect event
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-    }); 
 });
 
 // Start the server
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-
-app.get('/login', (req, res) => {
-    res.render("index3");
-if (req.cookies.username) {
-} else {
-    res.redirect("/login");
-}
-    }); 
-

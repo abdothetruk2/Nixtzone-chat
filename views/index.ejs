@@ -244,6 +244,7 @@ max-width: 100% !important;
       list-style: none;
       padding: 0;
       margin: 0;
+      
     }
 
      .online-users2 {
@@ -338,10 +339,46 @@ max-width: 100% !important;
       align-items: center;
       height: 100vh;
     }
+    .button-24 {
+      text-decoration: none;
+  background: #FF4742;
+  border: 1px solid #FF4742;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
 
+.button-24:hover,
+.button-24:active {
+  background-color: initial;
+  background-position: 0 0;
+  color: #FF4742;
+}
+
+.button-24:active {
+  opacity: .5;
+}
     /* The ball element */
    
     .ball {
+      
           width: 80px;
           height: 80px;
           position: relative;
@@ -365,28 +402,110 @@ max-width: 100% !important;
       0% {
         transform: translateY(0);
       }
-      50% {
-        transform: translateY(-50px);
+      50% { 
+        transform: translateY(-5px);
       }
       100% {
         transform: translateY(0);
       }
     }
+    /* Default Styles */
+.chat-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.sidebar, .sidebar2 {
+  width: 250px;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.chat-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.chat-input {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .chat-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    order: -1; /* Move sidebar to top */
+  }
+  .chat-box {
+    order: 0;
+  }
+  .sidebar2 {
+    display: none; /* Hide secondary sidebar */
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    padding: 0;
+    position: absolute;
+    left: -100%;
+    transition: left 0.3s;
+  }
+  .sidebar.active {
+    left: 0;
+  }
+  .chat-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .messages img {
+    width: 30px;
+    height: 30px;
+  }
+  .message-details {
+    font-size: 14px;
+  }
+  .chat-input .input-group {
+    flex-direction: column;
+  }
+  #sendButton {
+    width: 100%;
+    margin-top: 5px;
+  }
+}
+
   </style>
 </head>
 <body>
   <div class="chat-container">
     <!-- Sidebar -->
     <div class="sidebar">
-      <div>
-        <div class="header nlogo">Nzxitone</div>
+        <div>
+          <div class="header nlogo">Nzxitone</div>
         <h5 class="p-3">Online Users</h5>
         <ul class="online-users">
           <% if (users && users.length > 0) { %> <!-- Check if 'users' exists -->
             <% users.forEach(user => { %>
               <li class="text-center">
                 <img src="/e.jpg" alt="User">
-                <div>
+                <div> 
                   <div><%= user.name %></div>
                   <div style="font-size:12px"><%= user.email %></div>
                 </div>
@@ -402,6 +521,8 @@ max-width: 100% !important;
         <h6>Tasks</h6>
         <input type="text" id="taskInput" class="form-control" placeholder="Enter task">
         <button id="addTaskButton" class="btn btn-primary btn-sm w-100 mt-2">Add Task</button>
+        <a  href="/logout" class="button-24 btn-sm w-100 mt-2">Log out</a>
+
         <ul class="task-list" id="taskList"></ul>
       </div>
     </div>
@@ -413,7 +534,7 @@ max-width: 100% !important;
         <div class="message">
           <img src="/e.jpg" alt="User Picture">
           <div class="message-details">
-            <div class="name">ABdo khater</div>
+            <div class="name">Abdo khater</div>
             <div class="text">Welcome to Nzxitone chat room!</div>
             <div class="time">10:30 AM</div>
           </div>
@@ -434,29 +555,32 @@ max-width: 100% !important;
    
     </div>
   <div class="sidebar2">
-      <ul class="online-users2 ">
+      <ul class="online-users2  d-none">
         <li class="items items1">Task 2 assigned to abdo </li>
         <li class="items items2">Task 3 </li>
         <li class="items items3">Task 4 </li>
         <li class="items items4">Task 1 </li>
       </ul>
     <!-- Tasks Section -->
-     <div class="container2">
-    <div class="ball" id="ball"></div>
+     <div class="container2" style="background-color: transparent;">
+    <div class="ui-widget-content  ball" id="ball"></div>
   </div>
   </div>
   
 
 
   </div><script src="/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 
-<script src="/app.js"></script>
+
+<script src="/app.js"   ></script>
   <!-- Bootstrap JS -->
-  <script>
+  <script>  
     const taskInput = document.getElementById('taskInput');
     const addTaskButton = document.getElementById('addTaskButton');
     const taskList = document.getElementById('taskList');
 
+    
     // Add Task
     addTaskButton.addEventListener('click', () => {
       const taskName = taskInput.value.trim();
