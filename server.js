@@ -5,7 +5,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cookie = require("cookie");
 const app = express();
-const PORT = 5000;
+const PORT = 80;
 const cookieParser = require("cookie-parser");
 
 app.use(cors());
@@ -34,8 +34,8 @@ const io = new Server(server, {
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '6512746', // Change this to your actual MySQL password
-    database: 'mydb'
+    password: 'jDHdPHfMgwmBzZZkusbhShoSQvPOeVKj', // Change this to your actual MySQL password
+    database: 'railway'
 });
 
 db.connect(err => {
