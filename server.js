@@ -32,7 +32,7 @@ const io = new Server(server, {
 
 // MySQL Connection
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: 'mysql.railway.internal',
     user: 'root',
     password: 'jDHdPHfMgwmBzZZkusbhShoSQvPOeVKj', // Change this to your actual MySQL password
     database: 'railway'
